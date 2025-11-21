@@ -50,23 +50,24 @@ class WhatsappMessage
                 'caption'           =>  $caption,
                 'isForwarded'       =>  $isForwarded
             ];
+            
+            if(!$detailChatList || is_null($idContact)){
+                $arrInsertContact   =   [
+                    'IDCOUNTRY'             =>  $idCountry,
+                    'IDNAMETITLE'           =>  0,
+                    'NAMEFULL'              =>  $senderName,
+                    'PHONENUMBER'           =>  $phoneNumber,
+                    'PHONENUMBERBASE'       =>  $phoneNumberBase,
+                    'PHONENUMBERZEROPREFIX' =>  $isZeroPrefixNumber,
+                    'EMAILS'                =>  '',
+                    'ISVALIDWHATSAPP'       =>  1,
+                    'DATETIMEINSERT'        =>  $dateTimeNow
+                ];
+                $procInsertContact   =   $mainOperation->insertDataTable('t_contact', $arrInsertContact);
+                if($procInsertContact['status']) $idContact = $procInsertContact['insertID'];
+            }
 
             if(!$fromMe){
-                if(!$detailChatList || is_null($idContact)){
-                    $arrInsertContact   =   [
-                        'IDCOUNTRY'             =>  $idCountry,
-                        'IDNAMETITLE'           =>  0,
-                        'NAMEFULL'              =>  $senderName,
-                        'PHONENUMBER'           =>  $phoneNumber,
-                        'PHONENUMBERBASE'       =>  $phoneNumberBase,
-                        'PHONENUMBERZEROPREFIX' =>  $isZeroPrefixNumber,
-                        'EMAILS'                =>  '',
-                        'ISVALIDWHATSAPP'       =>  1,
-                        'DATETIMEINSERT'        =>  $dateTimeNow
-                    ];
-                    $procInsertContact   =   $mainOperation->insertDataTable('t_contact', $arrInsertContact);
-                    if($procInsertContact['status']) $idContact = $procInsertContact['insertID'];
-                }
 
                 if(!is_null($quotedMsgId) && $quotedMsgId != ''){
                     $detailChatThreadQuoted =   $cronModel->getDetailChatThreadQuoted($quotedMsgId);
