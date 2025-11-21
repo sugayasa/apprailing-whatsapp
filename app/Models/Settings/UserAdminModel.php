@@ -41,7 +41,7 @@ class UserAdminModel extends Model
     
     public function getDataUserAdmin($idLevelUserAdmin, $searchKeyword)
     {	
-        $this->select("A.IDUSERADMIN, B.LEVELNAME, A.NAME, A.EMAIL, A.USERNAME, A.STATUS,
+        $this->select("A.IDUSERADMIN, A.IDUSERADMINLEVEL, B.LEVELNAME, A.NAME, A.EMAIL, A.USERNAME, A.STATUS,
                     IF(A.DATETIMELOGIN IS NULL OR A.DATETIMELOGIN = '0000-00-00 00:00:00', 'Not Available', DATE_FORMAT(A.DATETIMELOGIN, '%d %b %Y %H:%i')) AS DATETIMELOGIN,
                     IF(A.DATETIMEACTIVITY IS NULL OR A.DATETIMEACTIVITY = '0000-00-00 00:00:00', 'Not Available', DATE_FORMAT(A.DATETIMEACTIVITY, '%d %b %Y %H:%i')) AS DATETIMEACTIVITY");
         $this->from('m_useradmin AS A', true);
