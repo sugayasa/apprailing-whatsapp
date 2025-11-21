@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controllers\Settings;
 
 use CodeIgniter\RESTful\ResourceController;
@@ -41,19 +40,16 @@ class UserAdmin extends ResourceController
         $idLevelUserAdmin       =   isset($idLevelUserAdmin) && $idLevelUserAdmin != '' ? hashidDecode($idLevelUserAdmin) : $idLevelUserAdmin;
         $searchKeyword          =   $this->request->getVar('searchKeyword');
         $dataUserAdmin          =	$userAdminModel->getDataUserAdmin($idLevelUserAdmin, $searchKeyword);
-        $dataUserAdminUnlinked  =	$userAdminModel->getDataUserAdminUnlinked();
         $dataMenu               =	$userAdminModel->getDataMenu();
         $dataLevelMenu          =	$userAdminModel->getDataLevelMenu();
 
         if($dataUserAdmin){
-            $dataUserAdmin          =   encodeDatabaseObjectResultKey($dataUserAdmin, ['IDUSERADMIN', 'IDUSERADMINLEVEL', 'IDUSERADMININTERNAL']);
+            $dataUserAdmin          =   encodeDatabaseObjectResultKey($dataUserAdmin, ['IDUSERADMIN', 'IDUSERADMINLEVEL']);
             $dataMenu               =   encodeDatabaseObjectResultKey($dataMenu, 'IDMENUADMIN');
-            $dataUserAdminUnlinked  =   encodeDatabaseObjectResultKey($dataUserAdminUnlinked, 'IDUSERADMIN');
             $dataLevelMenu          =   encodeDatabaseObjectResultKey($dataLevelMenu, ['IDUSERADMINLEVEL', 'IDMENUADMIN']);
             return $this->setResponseFormat('json')
                         ->respond([
                             "dataUserAdmin"         =>  $dataUserAdmin,
-                            "dataUserAdminUnlinked" =>  $dataUserAdminUnlinked,
                             "dataMenu"              =>  $dataMenu,
                             "dataLevelMenu"         =>  $dataLevelMenu
                         ]);
@@ -94,8 +90,6 @@ class UserAdmin extends ResourceController
 
         $idLevelUserAdmin   =   $this->request->getVar('idLevelUserAdmin');
         $idLevelUserAdmin   =   hashidDecode($idLevelUserAdmin);
-        $idUserAdminInternal=   $this->request->getVar('idUserAdminInternal');
-        $idUserAdminInternal=   $idUserAdminInternal != "" ? hashidDecode($idUserAdminInternal) : null;
         $name               =   $this->request->getVar('name');
         $email              =   $this->request->getVar('email');
         $username           =   $this->request->getVar('username');
@@ -105,13 +99,12 @@ class UserAdmin extends ResourceController
         if($newPassword != $repeatPassword) return throwResponseNotAcceptable("The repetition of the password you entered is not match");
 
         $arrInsertData      =   [
-            'IDUSERADMININTERNAL'   =>  $idUserAdminInternal,
-            'IDUSERADMINLEVEL'      =>  $idLevelUserAdmin,
-            'NAME'                  =>  $name,
-            'EMAIL'                 =>  $email,
-            'USERNAME'              =>  $username,
-            'PASSWORD'              =>  password_hash($newPassword, PASSWORD_DEFAULT),
-            'STATUS'                =>  1
+            'IDUSERADMINLEVEL'  =>  $idLevelUserAdmin,
+            'NAME'              =>  $name,
+            'EMAIL'             =>  $email,
+            'USERNAME'          =>  $username,
+            'PASSWORD'          =>  password_hash($newPassword, PASSWORD_DEFAULT),
+            'STATUS'            =>  1
         ];
 
         $mainOperation  =   new MainOperation();
@@ -141,8 +134,6 @@ class UserAdmin extends ResourceController
 
         $idLevelUserAdmin   =   $this->request->getVar('idLevelUserAdmin');
         $idLevelUserAdmin   =   hashidDecode($idLevelUserAdmin);
-        $idUserAdminInternal=   $this->request->getVar('idUserAdminInternal');
-        $idUserAdminInternal=   $idUserAdminInternal != "" ? hashidDecode($idUserAdminInternal) : null;
         $name               =   $this->request->getVar('name');
         $email              =   $this->request->getVar('email');
         $username           =   $this->request->getVar('username');
@@ -151,11 +142,10 @@ class UserAdmin extends ResourceController
         $repeatPassword     =   $this->request->getVar('repeatPassword');
 
         $arrUpdateUserAdmin =   [
-            'IDUSERADMININTERNAL'   =>  $idUserAdminInternal,
-            'IDUSERADMINLEVEL'      =>  $idLevelUserAdmin,
-            'NAME'                  =>  $name,
-            'EMAIL'                 =>  $email,
-            'USERNAME'              =>  $username
+            'IDUSERADMINLEVEL'  =>  $idLevelUserAdmin,
+            'NAME'              =>  $name,
+            'EMAIL'             =>  $email,
+            'USERNAME'          =>  $username
         ];
 
         if($currentPassword != "" || $newPassword != "" || $repeatPassword != ""){

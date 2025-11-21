@@ -25,13 +25,6 @@
 							<label for="editorUserAdmin-email" class="form-label">Email</label>
 							<input type="email" class="form-control" id="editorUserAdmin-email" name="editorUserAdmin-email" placeholder="Email" required>
 						</div>
-						<div class="col-lg-4 col-sm-6 mb-3">
-							<label for="editorUserAdmin-linkedAccountName" class="form-label">Linked Account</label>
-							<div class="alert alert-danger mb-0 py-2" role="alert">
-								<span id="editorUserAdmin-linkedAccountName"></span>
-								<i class="ri-pencil-line float-end font-size-18" id="editorUserAdmin-btnChooseLinkedAccount"></i>
-							</div>
-						</div>
 					</div>
 					<hr class="mt-2">
 					<div class="row">
@@ -89,29 +82,11 @@
 				</div>
 				<div class="card-footer">
 					<div class="d-flex justify-content-end">
-                        <input type="hidden" id="editorUserAdmin-idUserAdminInternal" name="editorUserAdmin-idUserAdminInternal" value="">
 						<input type="hidden" name="editorUserAdmin-idUserAdmin" id="editorUserAdmin-idUserAdmin" value="0">
 						<button type="button" class="btn btn-info btn-sm me-2" id="editorUserAdmin-btnCancel"><i class="ri-close-line"></i> Cancel</button>
 						<button type="submit" class="btn btn-primary btn-sm" id="editorUserAdmin-btnSave"><i class="ri-check-line"></i> Save</button>
 					</div>
 				</div>
-			</div>
-		</form>
-	</div>
-</div>
-<div class="modal fade" id="modal-chooseLinkedAccount" tabindex="-1" role="dialog" aria-labelledby="modal-chooseLinkedAccountLabel" aria-modal="true">
-	<div class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable">
-		<form class="modal-content" id="modalChooseLinkedAccount-form" method="post">
-			<div class="modal-header">
-				<h5 class="modal-title font-size-16" id="modal-chooseLinkedAccountLabel">Link With Internal User Account</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body p-4">
-				<ul class="list-group" id="modalChooseLinkedAccount-listAccount"></ul>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-info" data-bs-dismiss="modal">Cancel</button>
-				<button type="submit" class="btn btn-primary" id="modalChooseLinkedAccount-btnSelectAccount">Select Account</button>
 			</div>
 		</form>
 	</div>

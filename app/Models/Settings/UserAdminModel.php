@@ -41,13 +41,11 @@ class UserAdminModel extends Model
     
     public function getDataUserAdmin($idLevelUserAdmin, $searchKeyword)
     {	
-        $this->select("A.IDUSERADMIN, A.IDUSERADMININTERNAL, A.IDUSERADMINLEVEL, B.LEVELNAME, A.NAME, A.EMAIL, A.USERNAME, IF(C.NAME IS NULL, '-', CONCAT(C.NAME, ' - ', D.LEVELNAME)) AS LINKEDACCOUNTNAME, A.STATUS,
+        $this->select("A.IDUSERADMIN, B.LEVELNAME, A.NAME, A.EMAIL, A.USERNAME, A.STATUS,
                     IF(A.DATETIMELOGIN IS NULL OR A.DATETIMELOGIN = '0000-00-00 00:00:00', 'Not Available', DATE_FORMAT(A.DATETIMELOGIN, '%d %b %Y %H:%i')) AS DATETIMELOGIN,
                     IF(A.DATETIMEACTIVITY IS NULL OR A.DATETIMEACTIVITY = '0000-00-00 00:00:00', 'Not Available', DATE_FORMAT(A.DATETIMEACTIVITY, '%d %b %Y %H:%i')) AS DATETIMEACTIVITY");
         $this->from('m_useradmin AS A', true);
         $this->join('m_useradminlevel AS B', 'A.IDUSERADMINLEVEL = B.IDUSERADMINLEVEL', 'LEFT');
-        $this->join(APP_MAIN_DATABASE_NAME.'.m_useradmin AS C', 'A.IDUSERADMININTERNAL = C.IDUSERADMIN', 'LEFT');
-        $this->join(APP_MAIN_DATABASE_NAME.'.m_userlevel AS D', 'C.LEVEL = D.IDUSERLEVEL', 'LEFT');
         $this->where('A.ISPERMANENTUSER', 0);
         if(isset($idLevelUserAdmin) && $idLevelUserAdmin != 0 && $idLevelUserAdmin != '') $this->where('A.IDUSERADMINLEVEL', $idLevelUserAdmin);
         if(isset($searchKeyword) && !is_null($searchKeyword)){
@@ -63,22 +61,6 @@ class UserAdminModel extends Model
         $result =   $this->get()->getResultObject();
 
         if(is_null($result)) return false;
-        return $result;
-	}
-
-    public function getDataUserAdminUnlinked()
-    {	
-        $this->select("A.IDUSERADMIN, A.NAME, B.LEVELNAME");
-        $this->from(APP_MAIN_DATABASE_NAME.'.m_useradmin AS A', true);
-        $this->join(APP_MAIN_DATABASE_NAME.'.m_userlevel AS B', 'A.LEVEL = B.IDUSERLEVEL', 'LEFT');
-        $this->join('m_useradmin AS C', 'A.IDUSERADMIN = C.IDUSERADMININTERNAL', 'LEFT');
-        $this->where('A.STATUS', 1);
-        $this->where('C.IDUSERADMIN', null);
-        $this->orderBy('B.LEVELNAME, A.NAME');
-
-        $result =   $this->get()->getResultObject();
-
-        if(is_null($result)) return [];
         return $result;
 	}
 

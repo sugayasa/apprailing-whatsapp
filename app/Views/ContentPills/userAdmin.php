@@ -13,7 +13,7 @@
                             </button>
                         </button>
                     </div>
-                    <input type="text" class="form-control bg-light" placeholder="Search user admin.." id="filterUserAdmin-searchKeyword" name="filterUserAdmin-searchKeyword">
+                    <input type="text" class="form-control bg-light" placeholder="Search user admin..." id="filterUserAdmin-searchKeyword" name="filterUserAdmin-searchKeyword">
                 </div>
             </div>
         </div>
