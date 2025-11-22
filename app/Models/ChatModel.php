@@ -134,25 +134,24 @@ class ChatModel extends Model
         return $result;
     }
 
-    public function getListActiveReservation($idContact)
+    public function getListActiveSalesOrder($regionalDatabaseName, $idCustomer)
     {	
         $dateNow    =   date('Y-m-d');
-        $this->select("B.SOURCENAME, A.RESERVATIONTITLE, A.DURATIONOFDAY, DATE_FORMAT(A.RESERVATIONDATESTART, '%a, %d %b %Y') AS RESERVATIONDATESTARTSTR,
-                    DATE_FORMAT(A.RESERVATIONDATEEND, '%a, %d %b %Y') AS RESERVATIONDATEENDSTR, LEFT(A.RESERVATIONTIMESTART, 5) AS RESERVATIONTIMESTARTSTR,
-                    LEFT(A.RESERVATIONTIMEEND, 5) AS RESERVATIONTIMEEND, IF(A.HOTELNAME IS NULL OR A.HOTELNAME = '', '-', A.HOTELNAME) AS HOTELNAME,
-                    IF(A.PICKUPLOCATION IS NULL OR A.PICKUPLOCATION = '', '-', A.PICKUPLOCATION) AS PICKUPLOCATION,
-                    IF(A.DROPOFFLOCATION IS NULL OR A.DROPOFFLOCATION = '', '-', A.DROPOFFLOCATION) AS DROPOFFLOCATION, A.NUMBEROFADULT, A.NUMBEROFCHILD, A.NUMBEROFINFANT,
-                    A.BOOKINGCODE, A.REMARK, A.TOURPLAN, IF(A.IDAREA = -1, 'Without Transfer', IFNULL(CONCAT(C.AREANAME, ' (', C.AREATAGS, ')'), '-')) AS AREANAME, A.SPECIALREQUEST,
-                    A.IDRESERVATION");
-        $this->from(APP_MAIN_DATABASE_NAME.'.t_reservation A', true);
-        $this->join(APP_MAIN_DATABASE_NAME.'.m_source AS B', 'A.IDSOURCE = B.IDSOURCE', 'LEFT');
-        $this->join(APP_MAIN_DATABASE_NAME.'.m_area AS C', 'A.IDAREA = C.IDAREA', 'LEFT');
-        $this->where("A.IDCONTACT", $idContact);
-        $this->groupStart();
-        $this->where('A.RESERVATIONDATESTART >= ', $dateNow)
-        ->orWhere('A.RESERVATIONDATEEND', $dateNow);
-        $this->groupEnd();
-        $this->orderBy('CASE WHEN A.RESERVATIONDATESTART = \''.$dateNow.'\' THEN 0 ELSE 1 END, A.RESERVATIONDATESTART ASC');
+        $this->select("DATE_FORMAT(A.TANGGALWAKTU, '%d %b %Y %H:%i') AS TANGGALWAKTU, B.TIPESALESORDER, C.NAMA AS NAMAMARKETING, IFNULL(D.NAMAKELOMPOKHARGA, '-') AS NAMAKELOMPOKHARGA,
+                    A.CARABAYAR, COUNT(DISTINCT(F.IDPAYMENTNONLANGSUNG)) AS JUMLAHTERMIN, DATE_FORMAT(A.TANGGALBAYARTEMPO, '%d %b %Y') AS TANGGALBAYARTEMPO, A.STATUSPENAWARAN,
+                    A.STATUSBAYAR, IF(A.KETERANGAN IS NULL OR A.KETERANGAN = '', '-', A.KETERANGAN) AS KETERANGAN, IF(A.DISCAPPROVENOTE IS NULL OR A.DISCAPPROVENOTE = '', '-', A.DISCAPPROVENOTE) AS DISCAPPROVENOTE,
+                    A.TOTALHARGABARANG, A.ONGKOSPASANGTOTAL, A.ONGKIRESTIMASI, A.DISCREQ, A.DISCAPPROVE,
+                    A.TOTALPPN, A.GRANDTOTALHARGA, A.IDSALESORDERREKAP");
+        $this->from($regionalDatabaseName.'.t_salesorderrekap A', true);
+        $this->join(APP_MAIN_DATABASE_NAME.'.m_salesordertipe AS B', 'A.IDTIPESALESORDER = B.IDTIPESALESORDER', 'LEFT');
+        $this->join($regionalDatabaseName.'.m_marketing AS C', 'A.IDMARKETING = C.IDMARKETING', 'LEFT');
+        $this->join(APP_MAIN_DATABASE_NAME.'.m_kelompokharga AS D', 'A.IDKELOMPOKHARGA = D.IDKELOMPOKHARGA', 'LEFT');
+        $this->join($regionalDatabaseName.'.t_suratjalan AS E', 'A.IDSALESORDERREKAP = E.IDSALESORDERREKAP', 'LEFT');
+        $this->join($regionalDatabaseName.'.t_paymentnonlangsung AS F', 'A.IDSALESORDERREKAP = F.IDSALESORDER', 'LEFT');
+        $this->where("A.IDCUSTOMER", $idCustomer);
+        $this->where("A.STATUSPENAWARAN >= ", 0);
+        $this->groupBy('A.IDSALESORDERREKAP');
+        $this->orderBy('A.STATUSPENAWARAN, A.STATUSBAYAR, A.TANGGALWAKTU DESC');
 
         $result =   $this->get()->getResultObject();
 

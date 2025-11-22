@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="col-sm-8 col-4 text-end">
-                    <ul class="list-inline user-chat-nav text-end mb-0">                                        
+                    <ul class="list-inline user-chat-nav text-end mb-0">
                         <li class="list-inline-item" id="chat-topbar-badgeHandleStatus"></li>
                         <li class="list-inline-item">
                             <div class="dropdown">
@@ -55,8 +55,10 @@
                 </div>
                 <div class="col-12 pb-2" id="chat-actionButton">
                     <button type="button" class="btn btn-sm btn-warning me-1 d-none" id="chat-actionButton-markAsUnread"><span><i class="font-size-15 ri-chat-unread-line"></i> Mark as Unread</span></button>
+                    <?php  if(APP_SETTINGS_AI_ACTIVE_STATUS == true){ ?>
                     <button type="button" class="btn btn-sm btn-primary me-1 d-none" id="chat-actionButton-activateBOT" data-handleStatus="1"><span><i class="font-size-15 ri-robot-2-line"></i> Activate BOT</span></button>
                     <button type="button" class="btn btn-sm btn-success me-1 d-none" id="chat-actionButton-activateHuman" data-handleStatus="2"><span><i class="font-size-15 ri-user-voice-line"></i> Activate Human</span></button>
+                    <?php } ?>
                 </div>
                 <div class="col">
                     <textarea type="text" class="form-control form-control-lg bg-light border-light" id="chat-inputTextMessage" placeholder="Enter Message..." rows="1" autofocus></textarea>
@@ -104,7 +106,7 @@
             <div class="text-muted text-center">
                 <p class="mb-4"><span id="profile-sidebar-countryContinent">-</span><br/><span id="profile-sidebar-email">-</span></p>
             </div>
-            <div class="accordion" id="profile-sidebar-reservationList"></div>
+            <div class="accordion" id="profile-sidebar-salesOrderProyekList"></div>
         </div>
     </div>
 </div>

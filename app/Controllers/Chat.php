@@ -38,7 +38,6 @@ class Chat extends ResourceController
         return $this->failForbidden('[E-AUTH-000] Forbidden Access');
     }
 
-    //FIX
     public function getDataChatList()
     {
         $this->updateForceHandleInactiveSession();
@@ -142,13 +141,17 @@ class Chat extends ResourceController
 
         $idContact                  =   $detailContact['IDCONTACT'];
         $detailContact['IDCONTACT'] =   hashidEncode($idContact);
-        $listActiveReservation      =   $chatModel->getListActiveReservation($idContact);
-        $listActiveReservation      =   encodeDatabaseObjectResultKey($listActiveReservation, 'IDRESERVATION');
+        $detailRegional             =   $mainOperation->getDetailRegionalContact($idContact);
+        $regionalDatabaseName       =   isset($detailRegional['NAMADATABASE']) && $detailRegional['NAMADATABASE'] != '' ? $detailRegional['NAMADATABASE'] : APP_MAIN_DATABASE_DEFAULT;
+        $idCustomer                 =   isset($detailRegional['IDCUSTOMER']) && $detailRegional['IDCUSTOMER'] != '' ? $detailRegional['IDCUSTOMER'] : 0;
+        $listActiveSalesOrder       =   $chatModel->getListActiveSalesOrder($regionalDatabaseName, $idCustomer);
+        $listActiveSalesOrder       =   encodeDatabaseObjectResultKey($listActiveSalesOrder, 'IDSALESORDERREKAP');
+        
         return $this->setResponseFormat('json')
                     ->respond([
                         "detailContact"         =>  $detailContact,
                         "listChatThread"        =>  array_reverse($listChatThread),
-                        "listActiveReservation" =>  $listActiveReservation
+                        "listActiveSalesOrder" =>  $listActiveSalesOrder
                      ]);
     }
     

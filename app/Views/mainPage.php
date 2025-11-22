@@ -244,6 +244,7 @@ if(window.location.href != '<?=BASE_URL?>') window.history.replaceState({Title: 
 <script>
 	var intervalId, intervalIdForceHandleChatList, intervalIdForceHandleChatMenu;
 	var arrClassColor	=	['info', 'warning', 'success', 'light', 'primary', 'secondary', 'danger', 'dark'];
+	var aiActiveStatus	=	<?=APP_SETTINGS_AI_ACTIVE_STATUS?>;
 	var timezoneOffset	=	moment.tz.guess(),
 		dateToday		=	moment().format('DD-MM-YYYY'),
 		url				=	"<?=BASE_URL_ASSETS_JS?>app.js?<?=date('YmdHis')?>";
