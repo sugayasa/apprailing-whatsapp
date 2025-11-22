@@ -216,18 +216,20 @@
     					$("#chat-handleStatus").val(handleStatus);
     					$("#chat-handleForce").val(handleForce);
 
-						if(handleForce == 0) {
-							if(handleStatus == 1) {
-								$("#chat-actionButton-activateBOT").prop('disabled', true).addClass('d-none');
-								$("#chat-actionButton-activateHuman").prop('disabled', false).removeClass('d-none');
+    					if (aiActiveStatus){
+							if(handleForce == 0) {
+								if(handleStatus == 1) {
+									$("#chat-actionButton-activateBOT").prop('disabled', true).addClass('d-none');
+									$("#chat-actionButton-activateHuman").prop('disabled', false).removeClass('d-none');
+								}
+								
+								if(handleStatus == 2) {
+									$("#chat-actionButton-activateBOT").prop('disabled', false).removeClass('d-none');
+									$("#chat-actionButton-activateHuman").prop('disabled', true).addClass('d-none');
+								}
+							} else {
+								$("#chat-actionButton-activateBOT, #chat-actionButton-activateHuman").prop('disabled', true).addClass('d-none');
 							}
-							
-							if(handleStatus == 2) {
-								$("#chat-actionButton-activateBOT").prop('disabled', false).removeClass('d-none');
-								$("#chat-actionButton-activateHuman").prop('disabled', true).addClass('d-none');
-							}
-						} else {
-							$("#chat-actionButton-activateBOT, #chat-actionButton-activateHuman").prop('disabled', true).addClass('d-none');
 						}
 					}
 				}
