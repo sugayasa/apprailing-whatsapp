@@ -151,6 +151,7 @@ defined('APP_TIMEZONE')                                 || define('APP_TIMEZONE'
 defined('APP_MAIN_DATABASE_NAME')                       || define('APP_MAIN_DATABASE_NAME', $_ENV['APP_MAIN_DATABASE_NAME'] ?: 'db_main');
 defined('APP_MAIN_DATABASE_DEFAULT')                    || define('APP_MAIN_DATABASE_DEFAULT', $_ENV['APP_MAIN_DATABASE_DEFAULT'] ?: 'db_default');
 defined('APP_SETTINGS_AI_ACTIVE_STATUS')                || define('APP_SETTINGS_AI_ACTIVE_STATUS', $_ENV['APP_SETTINGS_AI_ACTIVE_STATUS'] ?: false);
+defined('APP_AUTO_REPLY_STATUS')                        || define('APP_AUTO_REPLY_STATUS', $_ENV['APP_AUTO_REPLY_STATUS'] ?: false);
 
 defined('MAX_INACTIVE_SESSION_MINUTES')                 || define('MAX_INACTIVE_SESSION_MINUTES', $_ENV['MAX_INACTIVE_SESSION_MINUTES'] ?: 60);
 defined('LOG_USER_REQUEST')                             || define('LOG_USER_REQUEST', $_ENV['LOG_USER_REQUEST'] ?: false);

@@ -114,4 +114,16 @@ class CronModel extends Model
         if(is_null($result)) return false;
         return true;
     }
+
+    public function getDetailLastReplyMessage($idContact){
+        $this->select("A.DATETIMECHAT");
+        $this->from('t_chatthread A', true);
+        $this->join('t_chatlist AS B', 'A.IDCHATLIST = B.IDCHATLIST', 'LEFT');
+        $this->where("B.IDCONTACT", $idContact);
+        $this->where("A.ISBOT", 1);
+
+        $result =   $this->get()->getRowArray();
+        if(is_null($result)) return false;
+        return $result;
+    }
 }

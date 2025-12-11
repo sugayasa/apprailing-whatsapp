@@ -105,7 +105,6 @@ class OneMsgIO
             $logger->info('Error:' . json_encode($th));
             return ['isSent' => false, 'errorCode' => 'E0000', 'errorMsg' => 'CURL'.curl_error($ch)];
         }
-        curl_close($ch);
     }
 
     public function getListOfTemplates()

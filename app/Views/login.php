@@ -58,7 +58,7 @@
 					</div>
 				</div>
 				<div class="mt-5 text-center">
-					<p>© 2025 - CV> Rich Group Indonesia</p>
+					<p>© 2025 - CV. Rich Group Indonesia</p>
 				</div>
 			</div>
 		</div>

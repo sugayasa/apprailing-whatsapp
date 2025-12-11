@@ -1,5 +1,6 @@
 <?php
 namespace App\Libraries;
+use App\Libraries\OneMsgIO;
 use App\Models\MainOperation;
 use App\Models\CronModel;
 
@@ -68,7 +69,6 @@ class WhatsappMessage
             }
 
             if(!$fromMe){
-
                 if(!is_null($quotedMsgId) && $quotedMsgId != ''){
                     $detailChatThreadQuoted =   $cronModel->getDetailChatThreadQuoted($quotedMsgId);
                     $isQuotedTemplate       =   $detailChatThreadQuoted['ISTEMPLATE'];
@@ -79,6 +79,51 @@ class WhatsappMessage
                 }
 
                 if(!is_null($idContact)) $mainOperation->insertUpdateChatTable($timeStamp, $idContact, $messageId, $messageBody, 0, $arrAdditionalThread);
+                if(APP_AUTO_REPLY_STATUS) {
+                    $detailLastMessageReply =   $cronModel->getDetailLastReplyMessage($idContact);
+                    $isSendAutoReply        =   false;
+                    
+                    if($detailLastMessageReply){
+                        $lastTimeReply  =   isset($detailLastMessageReply['DATETIMECHAT']) && !is_null($detailLastMessageReply['DATETIMECHAT']) ? $detailLastMessageReply['DATETIMECHAT'] : 0;
+                        if($lastTimeReply == 0){
+                            $isSendAutoReply    =   true;
+                        } else {
+                            $timeDiffHours  =   round(abs($timeStamp - $lastTimeReply) / 3600, 2);
+                            if($timeDiffHours >= 2){
+                                $isSendAutoReply    =   true;
+                            }
+                        }
+                    } else {
+                        $isSendAutoReply    =   true;
+                    }
+                    
+                    if($isSendAutoReply){
+                        $oneMsgIO               =   new OneMsgIO();
+                        $detailTemplateAutoReply=   $mainOperation->getDataChatTemplate(0, 'Auto Reply');
+                        
+                        if($detailTemplateAutoReply){
+                            $templateCode           =   $detailTemplateAutoReply['TEMPLATECODE'] ?? '';
+                            $templateLanguageCode   =   $detailTemplateAutoReply['TEMPLATELANGUAGECODE'] ?? '';
+                            $dataRegionalContact    =   $mainOperation->getDataRegionalContact();
+                            
+                            if($dataRegionalContact){
+                                $arrDataTemplateParameters  =   [];
+
+                                foreach($dataRegionalContact as $detailRegionalContact){
+                                    $arrDataTemplateParameters[]    =   ['type' => 'text', 'text' => $detailRegionalContact->NAMAKOTA];
+                                    $arrDataTemplateParameters[]    =   ['type' => 'text', 'text' => $detailRegionalContact->MARKETINGUTAMANAMA];
+                                    $arrDataTemplateParameters[]    =   ['type' => 'text', 'text' => $detailRegionalContact->MARKETINGUTAMATELPON];
+                                }
+
+                                $arrTemplateParameters[]    =   [
+                                    "type"      =>  "body",
+                                    "parameters"=>  $arrDataTemplateParameters
+                                ];
+                                $oneMsgIO->sendMessageTemplate($templateCode, $templateLanguageCode, $phoneNumber, $arrTemplateParameters);
+                            }
+                        }
+                    }
+                }
             } else {
                 $isMessageIdExist =   $cronModel->isMessageIdExist($messageId);
                 if(!$isMessageIdExist) {

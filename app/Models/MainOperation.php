@@ -220,30 +220,18 @@ class MainOperation extends Model
 
     public function getDataChatTemplate($templateType = 0, $templateName = '')
     {	
-        $columnConditionType  =   'ISCRONGREETING';
-
+        $columnConditionType  =   '';
         switch($templateType){
-            case 1      :
-            case "1"    :   $columnConditionType  =   'ISCRONGREETING'; break;
-            case 2      :
-            case "2"    :   $columnConditionType  =   'ISCRONRECONFIRMATION'; break;
-            case 3      :
-            case "3"    :   $columnConditionType  =   'ISCRONREVIEWREQUEST'; break;
-            case 4      :
-            case "4"    :   $columnConditionType  =   'ISQUESTION'; break;
-            default     :   $columnConditionType  =   'ISCRONGREETING'; break;
+            default     :   $columnConditionType  =   ''; break;
         }
 
-        $this->select("IDCHATTEMPLATE, IDONEMSGIO, TEMPLATECODE, TEMPLATENAME, TEMPLATELANGUAGECODE, CONTENTHEADER, CONTENTBODY,
-                        CONTENTFOOTER, CONTENTBUTTONS, PARAMETERSHEADER, PARAMETERSBODY, ISCRONGREETING, ISCRONRECONFIRMATION,
-                        ISCRONREVIEWREQUEST, ISQUESTION");
+        $this->select("IDCHATTEMPLATE, IDONEMSGIO, TEMPLATECODE, TEMPLATENAME, TEMPLATELANGUAGECODE, CONTENTHEADER, CONTENTBODY, CONTENTFOOTER, CONTENTBUTTONS, PARAMETERSHEADER, PARAMETERSBODY");
         $this->from('t_chattemplate', true);
-        if($templateType != 0) $this->where($columnConditionType, true);
+        if($templateType != 0 && $columnConditionType != '') $this->where($columnConditionType, true);
         if($templateName != '') $this->where('TEMPLATENAME', $templateName);
         $this->limit(1);
 
         $result =   $this->first();
-
         if(is_null($result)) false;
         return $result;
     }
@@ -764,4 +752,16 @@ class MainOperation extends Model
         if(is_null($result)) return [];
 		return $result;
 	}
+
+    public function getDataRegionalContact()
+    {	
+        $this->select("NAMAKOTA, MARKETINGUTAMANAMA, MARKETINGUTAMATELPON");
+        $this->from(APP_MAIN_DATABASE_NAME.'.a_kota', true);
+        $this->where('KOTAUTAMA', 1);
+        $this->where('INISIALKOTA !=', 'dev');
+
+        $result =   $this->get()->getResultObject();
+        if(is_null($result)) return [];
+		return $result;
+    }
 }
