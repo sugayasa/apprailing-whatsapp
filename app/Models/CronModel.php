@@ -121,6 +121,8 @@ class CronModel extends Model
         $this->join('t_chatlist AS B', 'A.IDCHATLIST = B.IDCHATLIST', 'LEFT');
         $this->where("B.IDCONTACT", $idContact);
         $this->where("A.ISBOT", 1);
+        $this->orderBy("A.DATETIMECHAT", "DESC");
+        $this->limit(1);
 
         $result =   $this->get()->getRowArray();
         if(is_null($result)) return false;
